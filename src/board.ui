@@ -13,6 +13,405 @@
   <property name="windowTitle">
    <string>Board</string>
   </property>
+  <layout class="QGridLayout" name="gridLayout_3">
+   <item row="0" column="1">
+    <widget class="QTabWidget" name="mainTab">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="cpuTab">
+      <attribute name="title">
+       <string>CPU</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="styleSheet">
+              <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
+             </property>
+             <property name="text">
+              <string>CPU使用率: </string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="cpuPercentLabel">
+             <property name="styleSheet">
+              <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
+             </property>
+             <property name="text">
+              <string>00</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="percent">
+             <property name="styleSheet">
+              <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
+             </property>
+             <property name="text">
+              <string>%</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="memTab">
+      <attribute name="title">
+       <string>内存</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="styleSheet">
+              <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
+             </property>
+             <property name="text">
+              <string>内存使用率: </string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="memPercentLabel">
+             <property name="styleSheet">
+              <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
+             </property>
+             <property name="text">
+              <string>00</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="percent_2">
+             <property name="styleSheet">
+              <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
+             </property>
+             <property name="text">
+              <string>%</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_4"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="diskTab">
+      <attribute name="title">
+       <string>磁盘</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_9">
+       <item row="0" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QLabel" name="label_3">
+             <property name="styleSheet">
+              <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
+             </property>
+             <property name="text">
+              <string>磁盘读写量: </string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_4">
+             <property name="styleSheet">
+              <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
+             </property>
+             <property name="text">
+              <string>读</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="cpuPercentLabel_3">
+             <property name="styleSheet">
+              <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
+             </property>
+             <property name="text">
+              <string>00</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="percent_3">
+             <property name="styleSheet">
+              <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
+             </property>
+             <property name="text">
+              <string>%</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_6">
+             <property name="text">
+              <string>    </string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_5">
+             <property name="styleSheet">
+              <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
+             </property>
+             <property name="text">
+              <string>写</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="cpuPercentLabel_4">
+             <property name="styleSheet">
+              <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
+             </property>
+             <property name="text">
+              <string>00</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="percent_4">
+             <property name="styleSheet">
+              <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
+             </property>
+             <property name="text">
+              <string>%</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_8"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="proTab">
+      <attribute name="title">
+       <string>进程</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_7">
+       <item row="0" column="0">
+        <widget class="QTableWidget" name="tableWidget">
+         <attribute name="horizontalHeaderCascadingSectionResizes">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+          <bool>true</bool>
+         </attribute>
+         <attribute name="horizontalHeaderStretchLastSection">
+          <bool>true</bool>
+         </attribute>
+         <column>
+          <property name="text">
+           <string>进程名</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>id</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>用户</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>cpu/%</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>内存/%</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>磁盘</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="sysTab">
+      <attribute name="title">
+       <string>系统</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_6">
+       <item row="0" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QGraphicsView" name="sysLogo">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>300</width>
+               <height>400</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="Line" name="line">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QListWidget" name="sysInfo"/>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>
