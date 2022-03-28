@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>802</width>
+    <height>602</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item row="0" column="1">
     <widget class="QTabWidget" name="mainTab">
      <property name="currentIndex">
-      <number>1</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="cpuTab">
       <attribute name="title">
@@ -294,7 +294,7 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_7">
        <item row="0" column="0">
-        <widget class="QTableWidget" name="tableWidget">
+        <widget class="QTableWidget" name="tableProcess">
          <attribute name="horizontalHeaderCascadingSectionResizes">
           <bool>false</bool>
          </attribute>
@@ -347,6 +347,9 @@
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QComboBox" name="comboBox"/>
+           </item>
            <item>
             <widget class="QGraphicsView" name="sysLogo">
              <property name="sizePolicy">

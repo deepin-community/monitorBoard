@@ -16,7 +16,9 @@ Board::~Board()
 void Board::init()
 {
     timer.start(1000);
-    connect(&timer, &QTimer::timeout, this, &Board::memRefresh);
+    connect(&timer, &QTimer::timeout, this, &Board::refresh);
+    processes = new (ProcessList);
+    refreshList();
 }
 
 //获取内存信息
@@ -44,8 +46,28 @@ int Board::getMem()
 }
 
 //刷新内存信息
-void Board::memRefresh()
+void Board::setMem()
 {
     ui->memPercentLabel->setNum(getMem());
+}
+void Board::refreshList()
+{
+    //设置要遍历的目录
+    QDir dir("/proc");
+    // QStringList filters;
+    // filters << "\"[1-9]\\d*\"";
+    // dir.setNameFilters(filters);
+    QStringList dirs = dir.entryList(QDir::Dirs, QDir::Name);
+    for (int i = 0; i < dirs.length(); i++)
+    {
+        node *obj = (node *)malloc(sizeof(node));
+        obj->process.id = dirs[i].toInt();
+        processes->append(obj);
+        // ui->comboBox->addItem(obj->process.id);
+    }
+}
+void Board::refresh()
+{
+    setMem();
     timer.start(1000);
 }

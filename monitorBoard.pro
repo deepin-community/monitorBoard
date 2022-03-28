@@ -10,10 +10,12 @@ CONFIG += c++17
 
 SOURCES += \
     src/main.cc \
-    src/board.cc
+    src/board.cc \
+    src/processlist.cc
 
 HEADERS += \
-    src/board.hh
+    src/board.hh \
+    src/processlist.hh
 
 FORMS += \
     src/board.ui
