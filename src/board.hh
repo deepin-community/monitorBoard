@@ -16,9 +16,10 @@ class Board : public QWidget
     Q_OBJECT
 
   public:
-    int memAvailable; //可用内存
-    int memTotal;     //总内存
-    int cpu;
+    int memAvailable;       //可用内存
+    int memTotal;           //总内存
+    int cpu;                // cpu总时间
+    int cpu_id;             // cpu空闲时间
     ProcessNode *processes; //进程头节点
 
     QTimer timer; //定时器
@@ -28,6 +29,7 @@ class Board : public QWidget
 
     void init();                  //初始化
     void getMem();                //获取总的内存信息
+    void getCPU();                //获取CPU占用率信息
     void getProcess();            //第一次获取进程列表
     void refreshProcess();        //刷新进程列表
     QString getName(QString pid); //获取进程名

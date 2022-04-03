@@ -53,9 +53,28 @@ void Board::init()
     //初始化获取信息
     getMem();     //总内存
     getProcess(); //进程列表
+    getCPU();     // CPU总时间和空闲时间
     //开启定时器
     timer.start(1000);
     connect(&timer, &QTimer::timeout, this, &Board::refresh);
+}
+
+//获取总CPU信息
+void Board::getCPU()
+{
+    QFile stat("/proc/stat");
+    stat.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QString stats = stat.readLine();
+    stat.close();
+    QStringList statsList = stats.split(' ');
+
+    int cpu_id = statsList[5].toInt();
+    int cpu = statsList[2].toInt() + statsList[3].toInt() + statsList[4].toInt() + statsList[5].toInt() +
+              statsList[6].toInt() + statsList[7].toInt() + statsList[8].toInt();
+    ui->cpuPercentLabel->setNum((100 - (100 * (cpu_id - this->cpu_id)) / (cpu - this->cpu)));
+    this->cpu = cpu;
+    this->cpu_id = cpu_id;
 }
 
 //获取总内存信息
@@ -195,6 +214,7 @@ void Board::refreshProcess()
 void Board::refresh()
 {
     getMem();
+    getCPU();
     refreshProcess();
     timer.start(1000);
 }
