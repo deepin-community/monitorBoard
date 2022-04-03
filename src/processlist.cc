@@ -1,13 +1,26 @@
 #include "processlist.hh"
-
-ProcessList::ProcessList()
+Process::Process(int id, int mem, int cpu, QString name)
 {
-    initList();
+    this->id = id;
+    this->mem = mem;
+    this->cpu = cpu;
+    this->name = name;
 }
-ProcessList::~ProcessList()
+ProcessNode::ProcessNode()
 {
-    node *p = nullptr;
-    node *pre = this->list;
+    this->process = new Process(0, 0, 0, "HEAD");
+    this->pre = this;
+    this->next = nullptr;
+}
+ProcessNode::ProcessNode(int id, int mem, int cpu, QString name)
+{
+    this->process = new Process(id, mem, cpu, name);
+    this->next = nullptr;
+}
+ProcessNode::~ProcessNode()
+{
+    ProcessNode *p = nullptr;
+    ProcessNode *pre = this;
     while (pre != nullptr)
     {
         p = pre->next;
@@ -15,27 +28,24 @@ ProcessList::~ProcessList()
         pre = p;
     }
 }
-void ProcessList::initList()
+
+void ProcessNode::append(ProcessNode *obj)
 {
-    this->list = (node *)malloc(sizeof(node));
-    list->next = nullptr;
-    list->pre = list;
-}
-void ProcessList::append(node *obj)
-{
-    this->list->pre->next = obj;
-    obj->pre = this->list->pre->next;
+    obj->pre = this->pre;
     obj->next = nullptr;
+    this->pre->next = obj;
+    this->pre = obj;
 }
-void ProcessList::insert(node *add, node *obj)
+void ProcessNode::insert(ProcessNode *add, ProcessNode *obj)
 {
     obj->pre = add;
     obj->next = add->next;
     add->next = obj;
+    obj->next->pre = obj;
 }
-void ProcessList::remove(node *obj)
+void ProcessNode::remove(ProcessNode *obj)
 {
     obj->pre->next = obj->next;
     obj->next->pre = obj->pre;
-    free(obj);
+    // free(obj);
 }

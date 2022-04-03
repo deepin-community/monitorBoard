@@ -5,26 +5,33 @@ typedef struct
 {
     int id;
     int mem;
-    int pid;
+    int cpu;
     QString name;
 } process;
-
-typedef struct node
-{
-    process process;
-    struct node *pre;
-    struct node *next;
-} node;
-
-class ProcessList
+class Process
 {
   public:
-    node *list;
+    int id;
+    int mem;
+    int cpu;
+    QString name;
 
-    ProcessList();
-    ~ProcessList();
-    void append(node *obj);
-    void initList();
-    void insert(node *add, node *obj);
-    void remove(node *obj);
+    Process();
+    Process(int id, int mem, int cpu, QString name);
+    ~Process();
+};
+
+class ProcessNode
+{
+  public:
+    Process *process;
+    ProcessNode *pre;
+    ProcessNode *next;
+
+    ProcessNode();
+    ProcessNode(int id, int mem, int cpu, QString name);
+    ~ProcessNode();
+    void append(ProcessNode *obj);
+    void insert(ProcessNode *add, ProcessNode *obj);
+    void remove(ProcessNode *obj);
 };
