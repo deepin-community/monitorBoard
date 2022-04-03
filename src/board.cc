@@ -129,8 +129,8 @@ int Board::getRByte(QString pid)
     QStringList ioInfosList = ioInfos.split('\n');
     ioInfosList[4].remove(' ');
     ioInfosList[4].remove("read_bytes:");
-    this->rByte += ioInfosList[4].toInt();
-    return (ioInfosList[4].toInt());
+    this->rByte += (ioInfosList[4].toInt() / 1024) / 1024;
+    return (ioInfosList[4].toInt() / 1048576);
 }
 
 int Board::getWByte(QString pid)
@@ -146,8 +146,8 @@ int Board::getWByte(QString pid)
     QStringList ioInfosList = ioInfos.split('\n');
     ioInfosList[5].remove(' ');
     ioInfosList[5].remove("write_bytes:");
-    this->rByte += ioInfosList[4].toInt();
-    return (ioInfosList[4].toInt());
+    this->wByte += (ioInfosList[4].toInt() / 1024) / 1024;
+    return (ioInfosList[4].toInt() / 1048576);
 }
 
 //获取进程列表
@@ -221,6 +221,9 @@ void Board::refreshProcess()
             p = p->next;
             if (p->process->id == dir.toInt())
             {
+                p->process->rByte = getRByte(dir);
+                p->process->wByte = getWByte(dir);
+                p->process->mem = getMem(dir);
                 ui->tableProcess->setItem(dirs.indexOf(dir), 0, new QTableWidgetItem(p->process->name));
                 ui->tableProcess->setItem(dirs.indexOf(dir), 1, new QTableWidgetItem(QString::number(p->process->id)));
                 ui->tableProcess->setItem(dirs.indexOf(dir), 2, new QTableWidgetItem(p->process->user));
@@ -262,6 +265,8 @@ void Board::refreshProcess()
     }
     ui->readLavel->setNum(this->rByte);
     ui->writeLabel->setNum(this->wByte);
+    this->rByte = 0;
+    this->wByte = 0;
     //允许排序
     ui->tableProcess->setSortingEnabled(true);
 }
@@ -272,7 +277,5 @@ void Board::refresh()
     getMem();
     getCPU();
     refreshProcess();
-    this->rByte = 0;
-    this->wByte = 0;
     timer.start(1000);
 }
