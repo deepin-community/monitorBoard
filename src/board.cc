@@ -50,6 +50,9 @@ void Board::init()
     memStrList[0].remove("MemTotal:");
     memStrList[0].remove("kB");
     this->memTotal = memStrList[0].toInt();
+
+    this->rByte = 0;
+    this->wByte = 0;
     //初始化获取信息
     getMem();     //总内存
     getProcess(); //进程列表
@@ -112,6 +115,41 @@ float Board::getMem(QString pid)
     return (memStrList[22].toFloat() / 1024);
 }
 
+//获取进程I/O信息
+int Board::getRByte(QString pid)
+{
+    QFile ioInfo("/proc/" + pid + "/io");
+    ioInfo.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString ioInfos = ioInfo.readAll();
+    ioInfo.close();
+    if (ioInfos.isEmpty())
+    {
+        return 0;
+    }
+    QStringList ioInfosList = ioInfos.split('\n');
+    ioInfosList[4].remove(' ');
+    ioInfosList[4].remove("read_bytes:");
+    this->rByte += ioInfosList[4].toInt();
+    return (ioInfosList[4].toInt());
+}
+
+int Board::getWByte(QString pid)
+{
+    QFile ioInfo("/proc/" + pid + "/io");
+    ioInfo.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString ioInfos = ioInfo.readAll();
+    ioInfo.close();
+    if (ioInfos.isEmpty())
+    {
+        return 0;
+    }
+    QStringList ioInfosList = ioInfos.split('\n');
+    ioInfosList[5].remove(' ');
+    ioInfosList[5].remove("write_bytes:");
+    this->rByte += ioInfosList[4].toInt();
+    return (ioInfosList[4].toInt());
+}
+
 //获取进程列表
 void Board::getProcess()
 {
@@ -122,7 +160,8 @@ void Board::getProcess()
     filters << "[1-9]*";
     proc.setNameFilters(filters);
     //获取需要遍历的目录列表
-    QStringList dirs = proc.entryList(QDir::Dirs, QDir::Name);
+    QStringList dirs = proc.entryList(QDir::Dirs, QDir::Unsorted);
+
     //设置表格大小
     ui->tableProcess->setRowCount(dirs.length());
     ui->processNum->setNum(dirs.length());
@@ -131,7 +170,8 @@ void Board::getProcess()
     for (const QString &dir : dirs)
     {
         //构造进程对象
-        ProcessNode *obj = new ProcessNode(dir.toInt(), getMem(dir), 0, getName(dir), getUser(dir));
+        ProcessNode *obj =
+            new ProcessNode(dir.toInt(), getMem(dir), 0, getRByte(dir), getWByte(dir), getName(dir), getUser(dir));
         //插入进程
         processes->append(obj);
         //填入表格
@@ -140,6 +180,8 @@ void Board::getProcess()
         ui->tableProcess->setItem(dirs.indexOf(dir), 2, new QTableWidgetItem(obj->process->user));
         ui->tableProcess->setItem(dirs.indexOf(dir), 4,
                                   new QTableWidgetItem(QString::number(obj->process->mem, 'f', 2) + "M"));
+        ui->tableProcess->setItem(dirs.indexOf(dir), 5, new QTableWidgetItem(QString::number(obj->process->rByte)));
+        ui->tableProcess->setItem(dirs.indexOf(dir), 6, new QTableWidgetItem(QString::number(obj->process->wByte)));
     }
     //允许排序
     ui->tableProcess->setSortingEnabled(true);
@@ -152,7 +194,7 @@ void Board::refreshProcess()
     QStringList filters;
     filters << "[1-9]*";
     proc.setNameFilters(filters);
-    QStringList dirs = proc.entryList(QDir::Dirs, QDir::Name);
+    QStringList dirs = proc.entryList(QDir::Dirs, QDir::Unsorted);
     ui->tableProcess->setRowCount(dirs.length());
     ui->processNum->setNum(dirs.length());
 
@@ -160,15 +202,18 @@ void Board::refreshProcess()
     ProcessNode *p = this->processes;
     for (const QString &dir : dirs)
     {
-        if (p->next == nullptr)
+        if (p->next == processes->pre)
         {
-            ProcessNode *obj = new ProcessNode(dir.toInt(), getMem(dir), 0, getName(dir), getUser(dir));
+            ProcessNode *obj =
+                new ProcessNode(dir.toInt(), getMem(dir), 0, getRByte(dir), getWByte(dir), getName(dir), getUser(dir));
             processes->append(obj);
             ui->tableProcess->setItem(dirs.indexOf(dir), 0, new QTableWidgetItem(obj->process->name));
             ui->tableProcess->setItem(dirs.indexOf(dir), 1, new QTableWidgetItem(QString::number(obj->process->id)));
             ui->tableProcess->setItem(dirs.indexOf(dir), 2, new QTableWidgetItem(obj->process->user));
             ui->tableProcess->setItem(dirs.indexOf(dir), 4,
                                       new QTableWidgetItem(QString::number(obj->process->mem, 'f', 2) + "M"));
+            ui->tableProcess->setItem(dirs.indexOf(dir), 5, new QTableWidgetItem(QString::number(obj->process->rByte)));
+            ui->tableProcess->setItem(dirs.indexOf(dir), 6, new QTableWidgetItem(QString::number(obj->process->wByte)));
             p = p->next;
         }
         else
@@ -181,6 +226,10 @@ void Board::refreshProcess()
                 ui->tableProcess->setItem(dirs.indexOf(dir), 2, new QTableWidgetItem(p->process->user));
                 ui->tableProcess->setItem(dirs.indexOf(dir), 4,
                                           new QTableWidgetItem(QString::number(p->process->mem, 'f', 2) + "M"));
+                ui->tableProcess->setItem(dirs.indexOf(dir), 5,
+                                          new QTableWidgetItem(QString::number(p->process->rByte)));
+                ui->tableProcess->setItem(dirs.indexOf(dir), 6,
+                                          new QTableWidgetItem(QString::number(p->process->wByte)));
                 continue;
             }
             else
@@ -188,7 +237,8 @@ void Board::refreshProcess()
                 if (p->process->id > dir.toInt())
                 {
                     p = p->pre;
-                    ProcessNode *obj = new ProcessNode(dir.toInt(), getMem(dir), 0, getName(dir), getUser(dir));
+                    ProcessNode *obj = new ProcessNode(dir.toInt(), getMem(dir), 0, getRByte(dir), getWByte(dir),
+                                                       getName(dir), getUser(dir));
                     processes->insert(p, obj);
                     ui->tableProcess->setItem(dirs.indexOf(dir), 0, new QTableWidgetItem(obj->process->name));
                     ui->tableProcess->setItem(dirs.indexOf(dir), 1,
@@ -196,6 +246,10 @@ void Board::refreshProcess()
                     ui->tableProcess->setItem(dirs.indexOf(dir), 2, new QTableWidgetItem(obj->process->user));
                     ui->tableProcess->setItem(dirs.indexOf(dir), 4,
                                               new QTableWidgetItem(QString::number(obj->process->mem, 'f', 2) + "M"));
+                    ui->tableProcess->setItem(dirs.indexOf(dir), 5,
+                                              new QTableWidgetItem(QString::number(obj->process->rByte)));
+                    ui->tableProcess->setItem(dirs.indexOf(dir), 6,
+                                              new QTableWidgetItem(QString::number(obj->process->wByte)));
                     p = p->next;
                 }
                 else
@@ -206,6 +260,8 @@ void Board::refreshProcess()
             }
         }
     }
+    ui->readLavel->setNum(this->rByte);
+    ui->writeLabel->setNum(this->wByte);
     //允许排序
     ui->tableProcess->setSortingEnabled(true);
 }
@@ -216,5 +272,7 @@ void Board::refresh()
     getMem();
     getCPU();
     refreshProcess();
+    this->rByte = 0;
+    this->wByte = 0;
     timer.start(1000);
 }

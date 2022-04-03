@@ -17,7 +17,7 @@
    <item row="0" column="1">
     <widget class="QTabWidget" name="mainTab">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="cpuTab">
       <attribute name="title">
@@ -197,31 +197,34 @@
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="cpuPercentLabel_3">
+            <widget class="QLabel" name="readLavel">
              <property name="styleSheet">
               <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
              </property>
              <property name="text">
-              <string>00</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="percent_3">
-             <property name="styleSheet">
-              <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
-             </property>
-             <property name="text">
-              <string>%</string>
+              <string>0</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QLabel" name="label_6">
              <property name="text">
-              <string/>
+              <string>MB/s</string>
              </property>
             </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
            <item>
             <widget class="QLabel" name="label_5">
@@ -234,22 +237,19 @@
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="cpuPercentLabel_4">
+            <widget class="QLabel" name="writeLabel">
              <property name="styleSheet">
               <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
              </property>
              <property name="text">
-              <string>00</string>
+              <string>0</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="percent_4">
-             <property name="styleSheet">
-              <string notr="true">font: 24pt &quot;文泉驿等宽微米黑&quot;;</string>
-             </property>
+            <widget class="QLabel" name="label_8">
              <property name="text">
-              <string>%</string>
+              <string>MB/s</string>
              </property>
             </widget>
            </item>
@@ -364,7 +364,12 @@
            </column>
            <column>
             <property name="text">
-             <string>磁盘</string>
+             <string>磁盘读</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>磁盘写</string>
             </property>
            </column>
           </widget>
@@ -382,9 +387,6 @@
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_4">
-           <item>
-            <widget class="QComboBox" name="comboBox"/>
-           </item>
            <item>
             <widget class="QGraphicsView" name="sysLogo">
              <property name="sizePolicy">

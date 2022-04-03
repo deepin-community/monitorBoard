@@ -20,6 +20,8 @@ class Board : public QWidget
     int memTotal;           //总内存
     int cpu;                // cpu总时间
     int cpu_id;             // cpu空闲时间
+    int rByte;              //读字节数
+    int wByte;              //写字节数
     ProcessNode *processes; //进程头节点
 
     QTimer timer; //定时器
@@ -36,6 +38,8 @@ class Board : public QWidget
     QString getUser(QString pid); //获取用户名
     float getMem(QString pid);    //获取进程内存信息
     void refresh();               //刷新所有信息
+    int getRByte(QString pid);    //获取进程读速率
+    int getWByte(QString pid);    //获取进程写速率
 
   private:
     Ui::Board *ui;

@@ -1,21 +1,23 @@
 #include "processlist.hh"
-Process::Process(int id, float mem, int cpu, QString name, QString user)
+Process::Process(int id, float mem, int cpu, int rByte, int wByte, QString name, QString user)
 {
     this->id = id;
     this->mem = mem;
     this->cpu = cpu;
+    this->rByte = rByte;
+    this->wByte = wByte;
     this->name = name;
     this->user = user;
 }
 ProcessNode::ProcessNode()
 {
-    this->process = new Process(0, 0.0, 0, "HEAD", "");
+    this->process = new Process(0, 0.0, 0, 0, 0, "HEAD", "");
     this->pre = this;
     this->next = nullptr;
 }
-ProcessNode::ProcessNode(int id, float mem, int cpu, QString name, QString user)
+ProcessNode::ProcessNode(int id, float mem, int cpu, int rByte, int wByte, QString name, QString user)
 {
-    this->process = new Process(id, mem, cpu, name, user);
+    this->process = new Process(id, mem, cpu, rByte, wByte, name, user);
     this->next = nullptr;
 }
 ProcessNode::~ProcessNode()
