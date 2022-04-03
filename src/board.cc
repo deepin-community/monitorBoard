@@ -1,8 +1,20 @@
 #include "board.hh"
 #include "ui_board.h"
 #include <QFileInfo>
+
+Board::Board(QWidget *parent) : QWidget(parent), ui(new Ui::Board)
+{
+    ui->setupUi(this);
+    init();
+}
+
+Board::~Board()
+{
+    delete ui;
+}
+
 //获取进程名
-QString getName(QString pid)
+QString Board::getName(QString pid)
 {
     // QFile stat("/proc/" + pid + "/stat");
     return QFileInfo(QFile::symLinkTarget("/proc/" + pid + "/exe")).baseName();
@@ -15,15 +27,10 @@ QString getName(QString pid)
     // return statList[1];
 }
 
-Board::Board(QWidget *parent) : QWidget(parent), ui(new Ui::Board)
+//获取用户
+QString Board::getUser(QString pid)
 {
-    ui->setupUi(this);
-    init();
-}
-
-Board::~Board()
-{
-    delete ui;
+    return QFileInfo(QFile::symLinkTarget("/proc/" + pid + "/cwd")).baseName();
 }
 
 //初始化
@@ -44,7 +51,7 @@ void Board::init()
     memStrList[0].remove("kB");
     this->memTotal = memStrList[0].toInt();
     //初始化获取信息
-    setMem();     //总内存
+    getMem();     //总内存
     getProcess(); //进程列表
     //开启定时器
     timer.start(1000);
@@ -52,7 +59,7 @@ void Board::init()
 }
 
 //获取总内存信息
-int Board::getMem()
+void Board::getMem()
 {
     QFile memInfo("/proc/meminfo");
     memInfo.open(QIODevice::ReadOnly | QIODevice::Text);
@@ -67,13 +74,23 @@ int Board::getMem()
     memStrList[2].remove("kB");
     this->memAvailable = memStrList[2].toInt();
 
-    return (((this->memTotal - this->memAvailable) * 100) / this->memTotal);
+    ui->memPercentLabel->setNum((((this->memTotal - this->memAvailable) * 100) / this->memTotal));
 }
 
-//刷新内存信息
-void Board::setMem()
+//获取进程内存信息
+float Board::getMem(QString pid)
 {
-    ui->memPercentLabel->setNum(getMem());
+    QFile memInfo("/proc/" + pid + "/status");
+    memInfo.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString memStr;
+    QStringList memStrList;
+    memStr = memInfo.readAll();
+    memInfo.close();
+    memStrList = memStr.split('\n');
+    memStrList[22].remove(' ');
+    memStrList[22].remove("RssAnon:\t");
+    memStrList[22].remove("kB");
+    return (memStrList[22].toFloat() / 1024);
 }
 
 //获取进程列表
@@ -95,12 +112,15 @@ void Board::getProcess()
     for (const QString &dir : dirs)
     {
         //构造进程对象
-        ProcessNode *obj = new ProcessNode(dir.toInt(), 0, 0, getName(dir));
+        ProcessNode *obj = new ProcessNode(dir.toInt(), getMem(dir), 0, getName(dir), getUser(dir));
         //插入进程
         processes->append(obj);
         //填入表格
         ui->tableProcess->setItem(dirs.indexOf(dir), 0, new QTableWidgetItem(obj->process->name));
         ui->tableProcess->setItem(dirs.indexOf(dir), 1, new QTableWidgetItem(QString::number(obj->process->id)));
+        ui->tableProcess->setItem(dirs.indexOf(dir), 2, new QTableWidgetItem(obj->process->user));
+        ui->tableProcess->setItem(dirs.indexOf(dir), 4,
+                                  new QTableWidgetItem(QString::number(obj->process->mem, 'f', 2) + "M"));
     }
     //允许排序
     ui->tableProcess->setSortingEnabled(true);
@@ -116,16 +136,20 @@ void Board::refreshProcess()
     QStringList dirs = proc.entryList(QDir::Dirs, QDir::Name);
     ui->tableProcess->setRowCount(dirs.length());
     ui->processNum->setNum(dirs.length());
+
     ui->tableProcess->setSortingEnabled(false);
     ProcessNode *p = this->processes;
     for (const QString &dir : dirs)
     {
         if (p->next == nullptr)
         {
-            ProcessNode *obj = new ProcessNode(dir.toInt(), 0, 0, getName(dir));
+            ProcessNode *obj = new ProcessNode(dir.toInt(), getMem(dir), 0, getName(dir), getUser(dir));
             processes->append(obj);
             ui->tableProcess->setItem(dirs.indexOf(dir), 0, new QTableWidgetItem(obj->process->name));
             ui->tableProcess->setItem(dirs.indexOf(dir), 1, new QTableWidgetItem(QString::number(obj->process->id)));
+            ui->tableProcess->setItem(dirs.indexOf(dir), 2, new QTableWidgetItem(obj->process->user));
+            ui->tableProcess->setItem(dirs.indexOf(dir), 4,
+                                      new QTableWidgetItem(QString::number(obj->process->mem, 'f', 2) + "M"));
             p = p->next;
         }
         else
@@ -135,6 +159,9 @@ void Board::refreshProcess()
             {
                 ui->tableProcess->setItem(dirs.indexOf(dir), 0, new QTableWidgetItem(p->process->name));
                 ui->tableProcess->setItem(dirs.indexOf(dir), 1, new QTableWidgetItem(QString::number(p->process->id)));
+                ui->tableProcess->setItem(dirs.indexOf(dir), 2, new QTableWidgetItem(p->process->user));
+                ui->tableProcess->setItem(dirs.indexOf(dir), 4,
+                                          new QTableWidgetItem(QString::number(p->process->mem, 'f', 2) + "M"));
                 continue;
             }
             else
@@ -142,11 +169,14 @@ void Board::refreshProcess()
                 if (p->process->id > dir.toInt())
                 {
                     p = p->pre;
-                    ProcessNode *obj = new ProcessNode(dir.toInt(), 0, 0, getName(dir));
+                    ProcessNode *obj = new ProcessNode(dir.toInt(), getMem(dir), 0, getName(dir), getUser(dir));
                     processes->insert(p, obj);
                     ui->tableProcess->setItem(dirs.indexOf(dir), 0, new QTableWidgetItem(obj->process->name));
                     ui->tableProcess->setItem(dirs.indexOf(dir), 1,
                                               new QTableWidgetItem(QString::number(obj->process->id)));
+                    ui->tableProcess->setItem(dirs.indexOf(dir), 2, new QTableWidgetItem(obj->process->user));
+                    ui->tableProcess->setItem(dirs.indexOf(dir), 4,
+                                              new QTableWidgetItem(QString::number(obj->process->mem, 'f', 2) + "M"));
                     p = p->next;
                 }
                 else
@@ -164,7 +194,7 @@ void Board::refreshProcess()
 //刷新所有信息
 void Board::refresh()
 {
-    setMem();
+    getMem();
     refreshProcess();
     timer.start(1000);
 }

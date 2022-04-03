@@ -26,12 +26,14 @@ class Board : public QWidget
     Board(QWidget *parent = nullptr);
     ~Board();
 
-    void getProcess();     //第一次获取进程列表
-    void refreshProcess(); //刷新进程列表
-    int getMem();          //获取总的内存信息
-    void setMem();         //设置内存信息
-    void refresh();        //刷新所有信息
-    void init();           //初始化
+    void init();                  //初始化
+    void getMem();                //获取总的内存信息
+    void getProcess();            //第一次获取进程列表
+    void refreshProcess();        //刷新进程列表
+    QString getName(QString pid); //获取进程名
+    QString getUser(QString pid); //获取用户名
+    float getMem(QString pid);    //获取进程内存信息
+    void refresh();               //刷新所有信息
 
   private:
     Ui::Board *ui;

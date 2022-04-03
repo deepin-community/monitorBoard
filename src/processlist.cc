@@ -1,20 +1,21 @@
 #include "processlist.hh"
-Process::Process(int id, int mem, int cpu, QString name)
+Process::Process(int id, float mem, int cpu, QString name, QString user)
 {
     this->id = id;
     this->mem = mem;
     this->cpu = cpu;
     this->name = name;
+    this->user = user;
 }
 ProcessNode::ProcessNode()
 {
-    this->process = new Process(0, 0, 0, "HEAD");
+    this->process = new Process(0, 0.0, 0, "HEAD", "");
     this->pre = this;
     this->next = nullptr;
 }
-ProcessNode::ProcessNode(int id, int mem, int cpu, QString name)
+ProcessNode::ProcessNode(int id, float mem, int cpu, QString name, QString user)
 {
-    this->process = new Process(id, mem, cpu, name);
+    this->process = new Process(id, mem, cpu, name, user);
     this->next = nullptr;
 }
 ProcessNode::~ProcessNode()
@@ -47,5 +48,5 @@ void ProcessNode::remove(ProcessNode *obj)
 {
     obj->pre->next = obj->next;
     obj->next->pre = obj->pre;
-    // free(obj);
+    free(obj);
 }
